@@ -64,7 +64,7 @@ class TaskGateway{
         return $this->conn->lastInsertId();
     }
 
-    public function update( string $id, array $data ) : string{
+    public function update( string $id, array $data ):int {
         $fields = [];
 
         if( ! empty( $data["name"])){
@@ -89,7 +89,33 @@ class TaskGateway{
             ];
         }
 
-        print_r( $fields );
-        exit;
+        if( empty($fields) ){
+            return 0;
+        }else{
+
+            $sets = array_map( function($value){
+     
+             return "$value = :$value";
+     
+            }, array_keys( $fields ));
+     
+            $sql = "UPDATE task"
+                 . " SET " . implode(", ", $sets)
+                 . " WHERE id = :id " ;
+     
+            $stmt = $this->conn->prepare( $sql );
+
+            $stmt->bindValue(":id", $id, PDO::PARAM_INT);
+
+            foreach ($fields as $name => $values) {
+               $stmt->bindValue(":$name", $values[0], $values[1]);
+            }
+
+            $stmt->execute();
+
+            return $stmt->rowCount();
+        }
+
+      
     }
 }
