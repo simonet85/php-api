@@ -58,8 +58,8 @@ class TaskController{
                         return;
                     }
 
-
-                    echo "update $id";
+                    $this->gateway->update(  $id,  $data );
+                    
                     break;
                 case "PUT" :
                     echo "put $id";
