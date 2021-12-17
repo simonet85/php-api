@@ -45,6 +45,20 @@ class TaskController{
                     echo json_encode($task);
                     break;
                 case "PATCH" :
+
+                    // echo "Create";
+                    // print_r($_POST);
+                    $data = (array) json_decode( file_get_contents("php://input"), true);
+              
+                    $errors = $this->getValidationErrors($data, false );
+
+                    if( ! empty($errors) ){
+
+                        $this->responseUnprocessableEntity( $errors );
+                        return;
+                    }
+
+
                     echo "update $id";
                     break;
                 case "PUT" :
@@ -79,10 +93,10 @@ class TaskController{
         echo json_encode(["message" => "Task created", "id" => $id]);
     }
 
-    private function getValidationErrors( array $data): array{
+    private function getValidationErrors( array $data, bool $is_new = true ): array{
         $errors = [];
 
-        if( empty( $data["name"])){
+        if( $is_new && empty( $data["name"])){
             $errors[] = "name is required";
         }
 
