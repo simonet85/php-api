@@ -44,6 +44,13 @@ if( $resource != "tasks" ){
 // echo $api_key;
 // http https//localhost/api/tasks?api-key=abc
 // print_r($_SERVER);
+if( empty($_SERVER["HTTP_X_API_KEY"])){
+
+    http_response_code(400);
+    echo json_encode(["message"=>"missing API key"]);
+    exit;
+    
+}
 $api_key = $_SERVER["HTTP_X_API_KEY"];
 echo $api_key;
 
