@@ -45,6 +45,12 @@ if( ! $auth->authenticateAPIKey()){
     exit;
 }
 
+//get the user ID
+$user_id = $auth->getUserID();
+
+var_dump( $user_id );
+exit;
+
 //instanciate the TaskGateway class
 $task_gateway = new TaskGateway( $database );
 
