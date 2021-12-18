@@ -58,9 +58,15 @@ $database = new Database($_ENV["DB_HOST"],$_ENV["DB_NAME"], $_ENV["DB_USER"], $_
 
 $user_gateway = new UserGateway( $database );
 
-echo $api_key;
+if( $user_gateway->getByAPIKey( $api_key)===false){
+    http_response_code(401);
+    echo json_encode(["message"=>'Invalid API key']);
+    exit;
+}
 
-exit;
+// echo $api_key;
+
+// exit;
 
 //Set the header content type and charset
 header("Content-type: application/json; charset=UTF-8");

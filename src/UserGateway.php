@@ -7,7 +7,7 @@ class UserGateway{
         $this->conn = $database->getConnection();
     }
 
-    public function getAPIKey( string $key){
+    public function getByAPIKey( string $key){
 
         $sql = "SELECT * 
                 FROM user
