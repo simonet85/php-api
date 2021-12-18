@@ -2,7 +2,7 @@
 
 declare(strict_types = 1);
 
-ini_set("display_error", "On");
+// ini_set("display_error", "On");
 
 require __DIR__."/vendor/autoload.php";
 //Sets a user-defined error handler function
@@ -39,6 +39,15 @@ if( $resource != "tasks" ){
     http_response_code(404);
     exit;
 }
+
+// $api_key = $_GET["api-key"];
+// echo $api_key;
+// http https//localhost/api/tasks?api-key=abc
+// print_r($_SERVER);
+$api_key = $_SERVER["HTTP_X_API_KEY"];
+echo $api_key;
+
+exit;
 
 //Set the header content type and charset
 header("Content-type: application/json; charset=UTF-8");
