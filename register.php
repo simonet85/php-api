@@ -26,12 +26,12 @@
                 :api_key
             )";
 
-        $stmt = $conn->prepare( $sql );
-        $password_hash = password_hash($_POST["password"], PASSWORD_DEFAULT);
+        $stmt = $conn->prepare( $sql ); // prepare stmt, returns a stmt.
+        $password_hash = password_hash($_POST["password"], PASSWORD_DEFAULT); // Hashing the input text value
 
-        $api_key = bin2hex( random_bytes(16) );
+        $api_key = bin2hex( random_bytes(16) ); //Convert binary data into hexadecimal representation
 
-        $stmt->bindValue(":name", $_POST["name"], PDO::PARAM_STR);
+        $stmt->bindValue(":name", $_POST["name"], PDO::PARAM_STR); // bind the value to the stmt
 
         $stmt->bindValue(":username", $_POST["username"], PDO::PARAM_STR);
 
@@ -39,7 +39,7 @@
 
         $stmt->bindValue(":api_key", $api_key, PDO::PARAM_STR);
 
-        $stmt->execute();
+        $stmt->execute(); // execute the stmt
 
         echo "Thank you for registering. Your API key is ", $api_key;
         exit;
