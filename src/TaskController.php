@@ -29,7 +29,7 @@ class TaskController{
                 }
 
                 // var_dump( $data );
-                $id = $this->gateway->create( $data );
+                $id = $this->gateway->createForUser( $data, $this->user_id );
 
                 $this->responseCreated($id );
 
@@ -38,7 +38,7 @@ class TaskController{
                 $this->responseMethodNotAllowed("Allow: GET, POST");
             }
         }else{ //When the id isn't null
-            $task = $this->gateway->get($id);
+            $task = $this->gateway->getForUser($id, $this->user_id);
 
             if( $task === false ){
                 $this->responseNotFound($id);
@@ -63,12 +63,12 @@ class TaskController{
                         return;
                     }
 
-                    $rows = $this->gateway->update(  $id,  $data );
+                    $rows = $this->gateway->updateForUser($this->user_id,  $id,  $data );
                     echo json_encode(["message"=>"Task updated", "rows" =>$rows]);
                     break;
 
                 case "DELETE" :
-                    $rows = $this->gateway->delete( $id );
+                    $rows = $this->gateway->deleteForUser($this->user_id, $id );
                     echo json_encode(["message"=>"Task delete", "rows" => $rows]);
                     break;
 

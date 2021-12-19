@@ -2,13 +2,15 @@
 class TaskGateway{
     private PDO $conn;
 
+    //Constructor 
     public function __construct( Database $database)
     {
         $this->conn = $database->getConnection();
     }
 
+    //Get All data for user taht has the corresponding ID
     public function getAllForUser(int $user_id): array{
-        
+
         $sql = "SELECT * 
                 FROM task 
                 WHERE user_id = :user_id
@@ -29,14 +31,19 @@ class TaskGateway{
         return $data;
     }
 
-    public function get( string $id ){
+    //fetching a task for a specific user
+    public function getForUser( string $id , int $user_id){
         $sql = "SELECT * 
                 FROM task
                 WHERE id = :id
+                AND user_id = :user_id
          ";
 
         $stmt = $this->conn->prepare( $sql );
+
         $stmt->bindValue(":id", $id, PDO::PARAM_INT);
+
+        $stmt->bindValue(":user_id", $user_id, PDO::PARAM_INT);
 
         $stmt->execute();
 
@@ -48,13 +55,16 @@ class TaskGateway{
         return $data;
 
     }
+    //Create a task for a specific user
+    public function createForUser( array $data , int $user_id ): string{
 
-    public function create( array $data ): string{
-
-        $sql = "INSERT INTO task (name, priority, is_completed) VALUES (:name, :priority, :is_completed)";
+        $sql = "INSERT INTO task (name, priority, is_completed, user_id) VALUES (:name, :priority, :is_completed, :user_id)";
 
         $stmt = $this->conn->prepare( $sql );
+
         $stmt->bindValue(":name", $data["name"], PDO::PARAM_STR);
+
+ 
 
         if( empty($data["priority"]) ){
             $stmt->bindValue(":priority", null, PDO::PARAM_NULL);
@@ -62,14 +72,16 @@ class TaskGateway{
             $stmt->bindValue(":priority", $data["priority"], PDO::PARAM_INT);
         }
 
+        $stmt->bindValue(":user_id", $user_id, PDO::PARAM_INT);
         $stmt->bindValue(":is_completed", $data["is_completd"] ?? false, PDO::PARAM_BOOL);
+
 
         $stmt->execute();
 
         return $this->conn->lastInsertId();
     }
-
-    public function update( string $id, array $data ):int {
+    //Update a task for specific user
+    public function updateForUser(int $user_id, string $id, array $data ):int {
         $fields = [];
 
         if( ! empty( $data["name"])){
@@ -106,11 +118,13 @@ class TaskGateway{
      
             $sql = "UPDATE task"
                  . " SET " . implode(", ", $sets)
-                 . " WHERE id = :id " ;
+                 . " WHERE id = :id "
+                 . "AND user_id = :user_id" ;
      
             $stmt = $this->conn->prepare( $sql );
 
             $stmt->bindValue(":id", $id, PDO::PARAM_INT);
+            $stmt->bindValue(":user_id", $user_id, PDO::PARAM_INT);
 
             foreach ($fields as $name => $values) {
                $stmt->bindValue(":$name", $values[0], $values[1]);
@@ -123,12 +137,22 @@ class TaskGateway{
 
       
     }
+    //Delete a task for specific user
+    public function deleteForUser(int $user_id, string $id): int{
 
-    public function delete( string $id): int{
-        $sql = "DELETE FROM task WHERE id = :id";
+        $sql = "DELETE FROM task 
+        WHERE id = :id
+        AND user_id = :user_id
+        ";
+
         $stmt = $this->conn->prepare( $sql );
+
         $stmt->bindValue(":id", $id, PDO::PARAM_INT);
+
+        $stmt->bindValue(":user_id", $user_id, PDO::PARAM_INT);
+
         $stmt->execute();
         return $stmt->rowCount();
+
     }
 }
