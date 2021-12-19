@@ -1,15 +1,20 @@
 <?php 
 class TaskController{
-    private $gateway;
-    public function __construct( TaskGateway $gateway)
+
+    private  $gateway;
+    private  $user_id;
+
+    public function __construct( TaskGateway $gateway, $user_id )
     {
         $this->gateway = $gateway;
+        $this->user_id = $user_id;
     }
+
     public function processRequest( string $method, ?string $id) : void{
         if($id == null){ //When the id is null
             if($method == 'GET'){
             //   echo 'index'; 
-            echo json_encode($this->gateway->getAll()); //Fetch all data
+            echo json_encode($this->gateway->getAllForUser( $this->user_id )); //Fetch  data for user
             }elseif( $method == "POST"){
                 // echo "Create";
                 // print_r($_POST);
@@ -59,7 +64,7 @@ class TaskController{
                     }
 
                     $rows = $this->gateway->update(  $id,  $data );
-                    echo json_encode(["message"=>"TAsk updated", "rows" =>$rows]);
+                    echo json_encode(["message"=>"Task updated", "rows" =>$rows]);
                     break;
 
                 case "DELETE" :

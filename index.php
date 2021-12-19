@@ -48,14 +48,14 @@ if( ! $auth->authenticateAPIKey()){
 //get the user ID
 $user_id = $auth->getUserID();
 
-var_dump( $user_id );
-exit;
+// var_dump( $user_id );
+// exit;
 
 //instanciate the TaskGateway class
 $task_gateway = new TaskGateway( $database );
 
 //instanciate the TaskController class
-$controller = new TaskController( $task_gateway );
+$controller = new TaskController( $task_gateway, $user_id );
 
 //passing the request method and the id
 $controller->processRequest( $_SERVER["REQUEST_METHOD"] , $id);

@@ -7,12 +7,17 @@ class TaskGateway{
         $this->conn = $database->getConnection();
     }
 
-    public function getAll(): array{
+    public function getAllForUser(int $user_id): array{
+        
         $sql = "SELECT * 
                 FROM task 
+                WHERE user_id = :user_id
                 ORDER BY name";
 
-        $stmt = $this->conn->query( $sql );
+        $stmt = $this->conn->prepare( $sql );
+        $stmt->bindValue(":user_id", $user_id, PDO::PARAM_INT);
+
+        $stmt->execute();
 
         //Convert bool into bool in json
         $data = [];
