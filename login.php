@@ -22,5 +22,13 @@ if (! array_key_exists("username", $data) ||
     exit;
 }
 
-echo json_encode($data);
+//Instanciate the database
+$database = new Database($_ENV["DB_HOST"], $_ENV["DB_NAME"], $_ENV["DB_USER"],$_ENV["DB_PASS"]);
 
+//Pass the database object to the UserGateway constructor 
+$user_gateway = new UserGateway( $database );
+
+//Call getByUsername() method to get the username
+$user = $user_gateway->getByUsername($data["username"]);
+
+echo json_encode($user);
