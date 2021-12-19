@@ -1,5 +1,6 @@
 <?php 
 class Database{
+    private ?PDO $conn = null;
     private string $host;
     private string $name;
     private string $user;
@@ -14,14 +15,19 @@ class Database{
     }
 
     public function getConnection(): PDO{
-        $dsn = "mysql:host={$this->host};dbname={$this->name};charset=utf8";
 
-        return new PDO( $dsn, $this->user, $this->password, [
-            PDO::ATTR_ERRMODE=>PDO::ERRMODE_EXCEPTION,
-            //Prevent numeric value to be converted
-            PDO::ATTR_EMULATE_PREPARES=>false,
-            PDO::ATTR_STRINGIFY_FETCHES=>false,
-
-        ]);
+        if ($this->conn === null) {
+            
+            $dsn = "mysql:host={$this->host};dbname={$this->name};charset=utf8";
+    
+            $this->conn =  new PDO( $dsn, $this->user, $this->password, [
+                PDO::ATTR_ERRMODE=>PDO::ERRMODE_EXCEPTION,
+                //Prevent numeric value to be converted
+                PDO::ATTR_EMULATE_PREPARES=>false,
+                PDO::ATTR_STRINGIFY_FETCHES=>false,
+    
+            ]);
+        }
+        return $this->conn;
     }
 }
