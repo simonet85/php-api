@@ -37,17 +37,23 @@ $database = new Database($_ENV["DB_HOST"],$_ENV["DB_NAME"], $_ENV["DB_USER"], $_
 $user_gateway = new UserGateway( $database );
 
 //Get the Authorization Header
-var_dump( $_SERVER["HTTP_AUTHORIZATION"]);
+// var_dump( $_SERVER["HTTP_AUTHORIZATION"]);
 // $headers = apache_request_headers();
 // echo $headers["Authorization"];
-exit; 
+// exit; 
 
 //instanciate the Auth class
 $auth = new Auth( $user_gateway );
 
 //Call the authenticateAPIKey method
 //And check if it return true or false
-if( ! $auth->authenticateAPIKey()){
+// if( ! $auth->authenticateAPIKey()){
+//     exit;
+// }
+
+//Call the authenticateAccessToken method
+//And check if it return true or false
+if( ! $auth->authenticateAccessToken() ){
     exit;
 }
 
