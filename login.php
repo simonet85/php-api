@@ -31,4 +31,21 @@ $user_gateway = new UserGateway( $database );
 //Call getByUsername() method to get the username
 $user = $user_gateway->getByUsername($data["username"]);
 
-echo json_encode($user);
+
+//check if the username is correct
+if($user === false){
+    http_response_code(401);
+    echo json_encode(["message" => "invalid authentication"]);
+    exit;
+} 
+
+//check if the password is correct
+if (! password_verify( $data["password"], $user["password_hash"])) {
+    http_response_code(401);
+    echo json_encode(["message" => "invalid authentication"]);
+    exit;
+}
+
+
+
+echo json_encode("Successful authentication");
