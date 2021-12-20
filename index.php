@@ -36,6 +36,12 @@ $database = new Database($_ENV["DB_HOST"],$_ENV["DB_NAME"], $_ENV["DB_USER"], $_
 
 $user_gateway = new UserGateway( $database );
 
+//Get the Authorization Header
+var_dump( $_SERVER["HTTP_AUTHORIZATION"]);
+// $headers = apache_request_headers();
+// echo $headers["Authorization"];
+exit; 
+
 //instanciate the Auth class
 $auth = new Auth( $user_gateway );
 
