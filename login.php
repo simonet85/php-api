@@ -23,7 +23,12 @@ if (! array_key_exists("username", $data) ||
 }
 
 //Instanciate the database
-$database = new Database($_ENV["DB_HOST"], $_ENV["DB_NAME"], $_ENV["DB_USER"],$_ENV["DB_PASS"]);
+$database = new Database(
+    $_ENV["DB_HOST"],
+    $_ENV["DB_NAME"],
+    $_ENV["DB_USER"],
+    $_ENV["DB_PASS"]
+);
 
 //Pass the database object to the UserGateway constructor 
 $user_gateway = new UserGateway( $database );
@@ -46,6 +51,17 @@ if (! password_verify( $data["password"], $user["password_hash"])) {
     exit;
 }
 
+//Payload
+$payload = [
+    "id" => $user["id"],
+    "name" => $user["name"]
+];
 
 
-echo json_encode("Successful authentication");
+$access_token = base64_encode(json_encode( $payload ));
+
+echo json_encode([
+    "access_token" => $access_token
+]);
+
+// echo $access_token;
