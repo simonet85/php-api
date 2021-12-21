@@ -14,6 +14,7 @@ class JWTCodec{
         $payload = $this->base64urlEncode( $payload );
 
         //Signature
+        //Generate a keyed hash value using the HMAC method
         $signature = hash_hmac("sha256", $header.".".$payload,"3778214125442A472D4B6150645367566B59703273357638792F423F4528482B", true);
 
         $signature = $this->base64urlEncode($signature);

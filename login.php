@@ -51,17 +51,25 @@ if (! password_verify( $data["password"], $user["password_hash"])) {
     exit;
 }
 
-//Payload
+//Payload : data about the user
+//sub key claim instead of id key, it's required for JWT standard.
+
 $payload = [
-    "id" => $user["id"],
+    "sub" => $user["id"],
     "name" => $user["name"]
 ];
 
+//Instead of using access token
+// $access_token = base64_encode(json_encode( $payload ));
 
-$access_token = base64_encode(json_encode( $payload ));
+//We will use JWT instead
+$codec = new JWTCodec;
+$jwt = $codec->encode( $payload );
+
 
 echo json_encode([
-    "access_token" => $access_token
+    // "access_token" => $access_token
+    "JWT" => $jwt
 ]);
 
 // echo $access_token;
