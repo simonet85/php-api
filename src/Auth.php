@@ -67,9 +67,10 @@ class Auth{
             http_response_code(400);
             echo json_encode(["message"=>"invalid JSON"]);
         }
+        
+        $this->user_id = $data["id"];
+
         return true;
-        // print_r( $data );
-        // exit;
       
     }
 }
