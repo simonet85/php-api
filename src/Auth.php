@@ -3,10 +3,12 @@ class Auth{
 
     private $user_gateway;
     private int $user_id;
+    private  $codec;
 
-    public function __construct( UserGateway $user_gateway )
+    public function __construct( UserGateway $user_gateway, JWTCodec $codec )
     {
         $this->user_gateway = $user_gateway;
+        $this->codec = $codec;
     }
 
     //Authenticate access token
@@ -52,23 +54,39 @@ class Auth{
             return false;
         }
 
-        $plain_text = base64_decode($matches[1], true);
+    /**
+         * Authorization usin access token
+         * 
+        
+        * $plain_text = base64_decode($matches[1], true);
+        * if($plain_text === false){
 
-        if($plain_text === false){
+        *     http_response_code(400);
+        *     echo json_encode(["message"=>"invalid authorization header"]);
+        *     return false;
+        * }
+        * When TRUE, returned objects will be converted into associative arrays.
+        * $data = json_decode($plain_text, true);
 
-            http_response_code(400);
-            echo json_encode(["message"=>"invalid authorization header"]);
+        * if ($data === null) {
+        *     http_response_code(400);
+        *     echo json_encode(["message"=>"invalid JSON"]);
+        * }
+ */
+        try{
+
+            //Get the user data from the payload
+            $data = $this->codec->decode( $matches[1] );
+
+        }catch(Exception $e){
+
+            http_response_code( 400 );
+            echo json_encode(["message" => $e->getMessage()]);
             return false;
-        }
-        // When TRUE, returned objects will be converted into associative arrays.
-        $data = json_decode($plain_text, true);
 
-        if ($data === null) {
-            http_response_code(400);
-            echo json_encode(["message"=>"invalid JSON"]);
         }
         
-        $this->user_id = $data["id"];
+        $this->user_id = $data["sub"]; //sub is equivalent to ID
 
         return true;
       

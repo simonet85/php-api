@@ -36,6 +36,9 @@ $database = new Database($_ENV["DB_HOST"],$_ENV["DB_NAME"], $_ENV["DB_USER"], $_
 
 $user_gateway = new UserGateway( $database );
 
+//Instanciate JWTCodec class
+$codec = new JWTcodec( $_ENV["SECRET_KEY"] );
+
 //Get the Authorization Header
 // var_dump( $_SERVER["HTTP_AUTHORIZATION"]);
 // $headers = apache_request_headers();
@@ -43,7 +46,7 @@ $user_gateway = new UserGateway( $database );
 // exit; 
 
 //instanciate the Auth class
-$auth = new Auth( $user_gateway );
+$auth = new Auth( $user_gateway, $codec );
 
 //Call the authenticateAPIKey method
 //And check if it return true or false
