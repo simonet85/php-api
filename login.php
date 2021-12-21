@@ -63,7 +63,7 @@ $payload = [
 // $access_token = base64_encode(json_encode( $payload ));
 
 //We will use JWT instead
-$codec = new JWTCodec;
+$codec = new JWTCodec( $_ENV["SECRET_KEY"] );
 $jwt = $codec->encode( $payload );
 
 

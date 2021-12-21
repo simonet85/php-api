@@ -1,5 +1,10 @@
 <?php 
 class JWTCodec{
+    private $key;
+    public function __construct( $key ){
+        $this->key = $key;
+    }
+
     public function encode(array $payload): string{
         //Header
         $header = json_encode([
@@ -15,7 +20,7 @@ class JWTCodec{
 
         //Signature
         //Generate a keyed hash value using the HMAC method
-        $signature = hash_hmac("sha256", $header.".".$payload,"3778214125442A472D4B6150645367566B59703273357638792F423F4528482B", true);
+        $signature = hash_hmac("sha256", $header.".".$payload,$this->key, true);
 
         $signature = $this->base64urlEncode($signature);
 
@@ -31,7 +36,7 @@ class JWTCodec{
             throw new InvalidArgumentException("Invalid token format");
         }
 
-        $signature = hash_hmac("sha256", $matches["header"].".".$matches["payload"],"3778214125442A472D4B6150645367566B59703273357638792F423F4528482B", true);
+        $signature = hash_hmac("sha256", $matches["header"].".".$matches["payload"],$this->key, true);
 
         $signature_from_token = $this->base64urlDecode( $matches["signature"]);
 
