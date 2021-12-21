@@ -73,18 +73,26 @@ class Auth{
         *     echo json_encode(["message"=>"invalid JSON"]);
         * }
  */
-        try{
+  
+        try {
 
             //Get the user data from the payload
             $data = $this->codec->decode( $matches[1] );
 
-        }catch(Exception $e){
+        } catch (InvalidSignatureException | Exception $e) { //Catch invalid Signature exception with the correct http response code
+
+            http_response_code( 401 );
+            echo json_encode(["message" => "Invalid signature"]);
+            return false;
+
+        } catch (Exception $e) {
 
             http_response_code( 400 );
             echo json_encode(["message" => $e->getMessage()]);
             return false;
 
-        }
+        } 
+
         
         $this->user_id = $data["sub"]; //sub is equivalent to ID
 

@@ -41,7 +41,7 @@ class JWTCodec{
         $signature_from_token = $this->base64urlDecode( $matches["signature"]);
 
         if( ! hash_equals( $signature, $signature_from_token )){
-            throw new Exception("Signature doesn't match");
+            throw new InvalidSignatureException;
         }
 
         $payload = json_decode( $this->base64urlDecode($matches["payload"]), true);
