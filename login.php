@@ -55,8 +55,9 @@ if (! password_verify( $data["password"], $user["password_hash"])) {
 //sub key claim instead of id key, it's required for JWT standard.
 
 $payload = [
-    "sub" => $user["id"],
-    "name" => $user["name"]
+    "sub"  => $user["id"],
+    "name" => $user["name"],
+    "exp"  => time() + 20 //20 seconds
 ];
 
 //Instead of using access token
