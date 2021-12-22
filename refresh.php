@@ -54,4 +54,4 @@
         exit;
     }
 
-    var_dump( $user );
+    require __DIR__ . "/token.php";

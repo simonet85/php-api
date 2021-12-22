@@ -54,31 +54,11 @@ if (! password_verify( $data["password"], $user["password_hash"])) {
 //Payload : data about the user
 //sub key claim instead of id key, it's required for JWT standard.
 
-$payload = [
-    "sub"  => $user["id"],
-    "name" => $user["name"],
-    "exp"  => time() + 20 //20 seconds
-];
 
 //Instead of using access token
 // $access_token = base64_encode(json_encode( $payload ));
-
 //We will use JWT instead
 $codec = new JWTCodec( $_ENV["SECRET_KEY"] );
-$jwt = $codec->encode( $payload );
-
-//Issue refresh_token
-$refresh_token = $codec->encode([
-    "sub" => $user["id"],
-    // "sub" => 0,//Invalid user ID
-    "exp" => time() + 432000 // 5 days
-]);
 
 
-echo json_encode([
-    // "access_token" => $access_token
-    "JWT" => $jwt,
-    "refresh_token" => $refresh_token
-]);
-
-// echo $access_token;
+require __DIR__ . "/token.php";
