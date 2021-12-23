@@ -22,4 +22,23 @@ class RefreshTokenGateway{
 
         return $stmt->execute();
     }
+
+    //Delete a refresh token record
+    public function delete( string $token): int{
+
+        //calculate the hash of the token value
+        $hash = hash_hmac("sha256", $token, $this->key);
+
+        $sql = "DELETE FROM refresh_token
+                WHERE token_hash = :token_hash";
+                
+        $stmt = $this->conn->prepare( $sql );
+        $stmt->bindValue(":token_hash", $hash, PDO::PARAM_STR);
+
+        $stmt->execute();
+
+        //return the numbers of deleted rows
+        return $stmt->rowCount();
+
+    }
 }

@@ -18,7 +18,7 @@ $refresh_token = $codec->encode([
 
 echo json_encode([
     // "access_token" => $access_token
-    "JWT" => $jwt,
+    "jwt" => $jwt,
     "refresh_token" => $refresh_token
 ]);
 

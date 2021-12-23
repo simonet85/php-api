@@ -55,3 +55,12 @@
     }
 
     require __DIR__ . "/token.php";
+
+    //Store the refresh token in the database when e issue it
+    $refresh_token_gateway = new RefreshTokenGateway( $database, $_ENV["SECRET_KEY"]);
+
+    //Delete the token
+    $refresh_token_gateway->delete( $data["token"]);
+
+    //Create a new token
+    $refresh_token_gateway->create( $refresh_token, $refresh_token_expiry);
