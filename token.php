@@ -8,10 +8,11 @@ $payload = [
 $jwt = $codec->encode( $payload );
 
 //Issue refresh_token
+$refresh_token_expiry = time() + 432000; // 5 days
 $refresh_token = $codec->encode([
     "sub" => $user["id"],
     // "sub" => 0,//Invalid user ID
-    "exp" => time() + 432000 // 5 days
+    "exp" => $refresh_token_expiry
 ]);
 
 
