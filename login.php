@@ -60,7 +60,22 @@ if (! password_verify( $data["password"], $user["password_hash"])) {
 //We will use JWT instead
 $codec = new JWTCodec( $_ENV["SECRET_KEY"] );
 
-
 require __DIR__ . "/token.php";
+
+// $refresh_token = $refresh_token_gateway->getByToken($data["token"]);
+
+if ($refresh_token === false) {
+    
+    http_response_code(400);
+    echo json_encode(["message" => "invalid token (not on whitelist)"]);
+    exit;
+}
+
+
+$refresh_token_gateway = new RefreshTokenGateway($database, $_ENV["SECRET_KEY"]);
+$refresh_token_gateway->create($refresh_token, $refresh_token_expiry);
+
+
+
 
 

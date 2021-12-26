@@ -36,7 +36,7 @@ class UserGateway{
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    public function getById( int $id ){
+    public function getById( int $id ): array | false{
         $sql = "SELECT * 
         FROM user 
         WHERE id = :id";

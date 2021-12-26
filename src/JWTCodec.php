@@ -5,7 +5,7 @@ class JWTCodec{
         $this->key = $key;
     }
 
-    public function encode(array $payload): string{
+    public function encode(array $payload){
         //Header
         $header = json_encode([
             "typ" => "JWT",
